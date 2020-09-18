@@ -47,10 +47,10 @@ public class Httpc {
                         String key = header[0];
                         String value = header[1];
                         // deal with " "
-                        if (key.startsWith("\"") || key.startsWith("\'")) {
+                        if (key.startsWith("\"") || key.startsWith("'")) {
                             key = key.substring(1, key.length());
                         }
-                        if (value.endsWith("\"") || value.endsWith("\'")) {
+                        if (value.endsWith("\"") || value.endsWith("'")) {
                             value = value.substring(0, value.length() - 1);
                         }
                         headers.put(key, value);
@@ -59,10 +59,10 @@ public class Httpc {
                 } else if (inputArr[i].equals("-d")) {
                     body = inputArr[++i];
                     // deal with " "
-                    if (body.startsWith("\"") || body.startsWith("\'")) {
+                    if (body.startsWith("\"") || body.startsWith("'")) {
                         body = body.substring(1, body.length());
                     }
-                    if (body.endsWith("\"") || body.endsWith("\'")) {
+                    if (body.endsWith("\"") || body.endsWith("'")) {
                         body = body.substring(0, body.length() - 1);
                     }
                 } else if (inputArr[i].equals("-f")) {
