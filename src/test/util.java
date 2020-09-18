@@ -1,10 +1,8 @@
 package test;
-
-import controllers.fileHandler;
+import static handlers.FileHandler.writeToFile;
 
 public class util {
     public static void main(String[] args) {
-        fileHandler f=new fileHandler();
-        f.writeToFile("test.txt",true,"test02");
+        writeToFile("test.txt",true,"test02");
     }
 }

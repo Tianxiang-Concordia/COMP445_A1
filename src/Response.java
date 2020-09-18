@@ -13,10 +13,11 @@ public class Response {
         this.rawData = rawData;
     }
 
-    public String toString(){
+    public String toString() {
         return rawData;
     }
-    public String showBody(){
+
+    public String showBody() {
         return body;
     }
 }
