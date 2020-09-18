@@ -1,6 +1,6 @@
-package controllers;
+package handlers;
 
-public class helpController {
+public class HelpHandler {
     public static void printHelp(String input){
         if (input.matches("(?i)httpc\\s+help$")){
             System.out.println("httpc is a curl-like application but supports HTTP protocol only.");
