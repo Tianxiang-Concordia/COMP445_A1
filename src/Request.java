@@ -72,7 +72,6 @@ public class Request {
             }
 
             request.append("\r\n");
-            System.out.println(request);
 
             // Create socket object,send the request and get the response
             Socket socket = new Socket(host, port);
