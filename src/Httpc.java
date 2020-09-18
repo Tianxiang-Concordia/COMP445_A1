@@ -15,7 +15,7 @@ public class Httpc {
                 break;
             }
             //help part
-            if (input.matches("^httpc help.*")) {
+            if (input.matches("^(?i)httpc\\s+help.*")) {
                 printHelp(input);
                 continue;
             }
