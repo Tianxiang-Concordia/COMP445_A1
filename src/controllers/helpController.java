@@ -1,7 +1,7 @@
 package controllers;
 
 public class helpController {
-    public void printHelp(String input){
+    public static void printHelp(String input){
         if (input.equalsIgnoreCase("httpc help")){
             System.out.println("httpc is a curl-like application but supports HTTP protocol only.");
             System.out.println("Usage:");
@@ -17,7 +17,7 @@ public class helpController {
             System.out.println();
             System.out.println("    -v      Prints the detail of the response such as protocol, status, and headers.");
             System.out.println("    -h      key:value Associates headers to HTTP Request with the format 'key:value'.");
-        }else if(input.equalsIgnoreCase("httpc help post"){
+        }else if(input.equalsIgnoreCase("httpc help post")){
             System.out.println("usage: httpc post [-v] [-h key:value] [-d inline-data] [-f file] URL");
             System.out.println();
             System.out.println("Post executes a HTTP POST request for a given URL with inline data or from file");

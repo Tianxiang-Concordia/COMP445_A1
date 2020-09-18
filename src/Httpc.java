@@ -1,5 +1,8 @@
 import java.util.Scanner;
 import java.util.HashMap;
+import controllers.helpController;
+
+import static controllers.helpController.printHelp;
 
 public class Httpc {
     public static void main(String[] args) {
