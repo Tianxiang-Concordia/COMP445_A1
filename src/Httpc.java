@@ -12,6 +12,9 @@ public class Httpc {
             if (input.equals("-q")){
                 break;
             }
+            //help part
+            printHelp(input);
+
             //deal with the {"Assignment":      1}
             input=input.replaceAll(":\\s+",":");
             System.out.println(input);
@@ -63,10 +66,7 @@ public class Httpc {
                 } else if (inputArr[i].matches("^http://(.)*")) {
                     url = inputArr[i];
                 }
-                else if(inputArr[i].equals("help")){
-                    System.out.println("httpc is a curl-like application but supports HTTP protocol only.");
 
-                }
             }
 
             System.out.println("requestMethod: " + method);
@@ -79,5 +79,6 @@ public class Httpc {
 
 
     }
+
 
 }
