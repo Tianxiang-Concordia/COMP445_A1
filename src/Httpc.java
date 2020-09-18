@@ -1,3 +1,9 @@
+import controllers.fileHandler;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Scanner;
 import java.util.HashMap;
 
@@ -5,6 +11,7 @@ import static controllers.helpController.printHelp;
 
 public class Httpc {
     public static void main(String[] args) {
+        fileHandler fh=new fileHandler();
 
         while (true) {
             // Read the command from the keyboard
@@ -19,6 +26,10 @@ public class Httpc {
                 printHelp(input);
                 continue;
             }
+            //for empty string
+            if (input.equals("")) {
+                continue;
+            }
             //deal with the {"Assignment":      1}
             input = input.replaceAll(":\\s+", ":");
 //            System.out.println(input);
@@ -31,6 +42,8 @@ public class Httpc {
             String body = "";
             String filePath = "";
             String url = "";
+            String fileName="";
+            boolean fileFlag=false;
 
             for (int i = 0; i < inputArr.length; i++) {
                 if (inputArr[i].toLowerCase().equals("post")) {
@@ -76,6 +89,10 @@ public class Httpc {
                         url = url.substring(0, url.length() - 1);
                     }
                 }
+                else if(inputArr[i].equals("-o")){
+                    fileFlag=true;
+                    fileName = inputArr[++i];
+                }
 
             }
 
@@ -89,17 +106,23 @@ public class Httpc {
             Request rq= new Request(method,headers,body,filePath,url);
             Response res = rq.send();
             while (res.status.matches("3\\d{2}")) {
-                if (isShowHeader)
+                if (isShowHeader) {
                     System.out.println(res);
-                else
+                    fh.writeToFile(fileName,fileFlag,res.toString());
+                }
+                else {
                     System.out.println(res.showBody());
+                    fh.writeToFile(fileName,fileFlag,res.showBody());
+                }
                 new Request("GET", new HashMap<>(), "", "", res.headers.get("Location"));
                 res = rq.send();
             }
             if (isShowHeader) {
                 System.out.println(res);
+                fh.writeToFile(fileName,fileFlag,res.toString());
             } else {
                 System.out.println(res.showBody());
+                fh.writeToFile(fileName,fileFlag,res.showBody());
             }
         }
     }
