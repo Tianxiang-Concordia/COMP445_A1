@@ -28,6 +28,8 @@ public class helpController {
             System.out.println("    -f      fileAssociates the content of a file to the body HTTP POST request.");
             System.out.println();
             System.out.println("Either [-d] or [-f] can be used but not both.");
+
         }
+
     }
 }
