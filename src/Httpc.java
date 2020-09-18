@@ -1,3 +1,9 @@
+import controllers.fileHandler;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Scanner;
 import java.util.HashMap;
 
@@ -5,6 +11,7 @@ import static controllers.helpController.printHelp;
 
 public class Httpc {
     public static void main(String[] args) {
+        fileHandler fh=new fileHandler();
 
         while (true) {
             // Read the command from the keyboard
@@ -19,9 +26,13 @@ public class Httpc {
                 printHelp(input);
                 continue;
             }
+            //for empty string
+            if (input.equals("")) {
+                continue;
+            }
             //deal with the {"Assignment":      1}
             input = input.replaceAll(":\\s+", ":");
-            System.out.println(input);
+//            System.out.println(input);
 
             String[] inputArr = input.split(" ");
             //Request property
@@ -31,6 +42,8 @@ public class Httpc {
             String body = "";
             String filePath = "";
             String url = "";
+            String fileName="";
+            boolean fileFlag=false;
 
             for (int i = 0; i < inputArr.length; i++) {
                 if (inputArr[i].toLowerCase().equals("post")) {
@@ -40,17 +53,17 @@ public class Httpc {
                 } else if (inputArr[i].equals("-h")) {
                     //looking for next item, and put it in the Hashmap
                     i++;
-                    String[] header = inputArr[i].split(":");
+                    String[] header = inputArr[i].split(":",2);
                     if (header.length < 2) {
                         System.out.println("Header's format is invalid");
                     } else {
                         String key = header[0];
                         String value = header[1];
                         // deal with " "
-                        if (key.startsWith("\"") || key.startsWith("\'")) {
-                            key = key.substring(1, key.length());
+                        if (key.startsWith("\"") || key.startsWith("'")) {
+                            key = key.substring(1);
                         }
-                        if (value.endsWith("\"") || value.endsWith("\'")) {
+                        if (value.endsWith("\"") || value.endsWith("'")) {
                             value = value.substring(0, value.length() - 1);
                         }
                         headers.put(key, value);
@@ -59,28 +72,58 @@ public class Httpc {
                 } else if (inputArr[i].equals("-d")) {
                     body = inputArr[++i];
                     // deal with " "
-                    if (body.startsWith("\"") || body.startsWith("\'")) {
-                        body = body.substring(1, body.length());
+                    if (body.startsWith("\"") || body.startsWith("'")) {
+                        body = body.substring(1);
                     }
-                    if (body.endsWith("\"") || body.endsWith("\'")) {
+                    if (body.endsWith("\"") || body.endsWith("'")) {
                         body = body.substring(0, body.length() - 1);
                     }
                 } else if (inputArr[i].equals("-f")) {
                     filePath = inputArr[++i];
-                } else if (inputArr[i].matches("^http://(.)*")) {
+                } else if (inputArr[i].matches(".*http://(.)*")) {
                     url = inputArr[i];
+                    if (url.startsWith("\"") || url.startsWith("'")) {
+                        url = url.substring(1);
+                    }
+                    if (url.endsWith("\"") || url.endsWith("'")) {
+                        url = url.substring(0, url.length() - 1);
+                    }
+                }
+                else if(inputArr[i].equals("-o")){
+                    fileFlag=true;
+                    fileName = inputArr[++i];
                 }
 
             }
 
-            System.out.println("requestMethod: " + method);
-            System.out.println("isShowHeader: " + isShowHeader);
-            System.out.println("headers: " + headers);
-            System.out.println("body: " + body);
-            System.out.println("filePath: " + filePath);
-            System.out.println("url: " + url);
+//            System.out.println("requestMethod: " + method);
+//            System.out.println("isShowHeader: " + isShowHeader);
+//            System.out.println("headers: " + headers);
+//            System.out.println("body: " + body);
+//            System.out.println("filePath: " + filePath);
+//            System.out.println("url: " + url);
 
-
+            Request rq= new Request(method,headers,body,filePath,url);
+            Response res = rq.send();
+            while (res.status.matches("3\\d{2}")) {
+                if (isShowHeader) {
+                    System.out.println(res);
+                    fh.writeToFile(fileName,fileFlag,res.toString());
+                }
+                else {
+                    System.out.println(res.showBody());
+                    fh.writeToFile(fileName,fileFlag,res.showBody());
+                }
+                new Request("GET", new HashMap<>(), "", "", res.headers.get("Location"));
+                res = rq.send();
+            }
+            if (isShowHeader) {
+                System.out.println(res);
+                fh.writeToFile(fileName,fileFlag,res.toString());
+            } else {
+                System.out.println(res.showBody());
+                fh.writeToFile(fileName,fileFlag,res.showBody());
+            }
         }
     }
 }
