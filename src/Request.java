@@ -4,8 +4,6 @@ import java.net.Socket;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 
 public class Request {
@@ -13,23 +11,18 @@ public class Request {
     String method;
     HashMap<String, String> headers;
     String body;
-    String filePath;
     String url;
 
-    public Request(String method, HashMap<String, String> headers, String body, String filePath, String url) {
+    public Request(String method, HashMap<String, String> headers, String body, String url) {
         this.method = method;
         this.headers = headers;
         this.body = body;
-        this.filePath = filePath;
         this.url = url;
     }
 
     public Response send() {
 
-        String res_status = "";
-        HashMap<String, String> res_headers = new HashMap<>();
-        String res_body = "";
-        String res_responseStr = "";
+        String responseStr = "";
 
         try {
             // parse the Url into the host, port, path and query
@@ -58,6 +51,8 @@ public class Request {
                 headers.put("User-Agent", "Concordia-HTTP/1.0");
             }
 
+            headers.put("Content-Length", String.valueOf(body.length()));
+
             for (Map.Entry<String, String> entry : headers.entrySet()) {
                 request.append(entry.getKey()).append(": ").append(entry.getValue()).append("\r\n");
             }
@@ -65,10 +60,6 @@ public class Request {
             if (!this.body.equals("")) {
                 request.append("\r\n");
                 request.append(this.body);
-            } else if (!this.filePath.equals("")) {
-                // @TODO File Upload
-                request.append("\r\n");
-                request.append(this.filePath);
             }
 
             request.append("\r\n");
@@ -87,30 +78,14 @@ public class Request {
             }
             socket.close();
 
-            res_responseStr = response.toString();
-            String[] responseArr = res_responseStr.split("\r\n");
-            //Get the response status
-            Pattern statusRegExp = Pattern.compile("(\\d{3})");
-            Matcher m = statusRegExp.matcher(responseArr[0]);
-            while (m.find())
-                res_status = m.group(1);
+            responseStr = response.toString();
 
-            //Get the response header and body
-            for (int i = 1; i < responseArr.length; i++) {
-                if (responseArr[i].equals("")) {
-                    res_body = responseArr[++i];
-                    break;
-                } else {
-                    String[] header = responseArr[i].split(": ");
-                    res_headers.put(header[0], header[1]);
-                }
-            }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return new Response(res_status, res_headers, res_body, res_responseStr);
+        return new Response(responseStr);
 
     }
 }
