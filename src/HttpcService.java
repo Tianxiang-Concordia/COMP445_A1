@@ -1,12 +1,12 @@
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.stream.Stream;
-
 public class HttpcService {
 
     private String[] input;
@@ -80,7 +80,14 @@ public class HttpcService {
                         System.out.println(res.showBody());
                     }
                 }
-                Request rq = new Request("GET", new HashMap<>(), "", res.headers.get("Location"));
+                String url = res.headers.get("Location");
+                url = url == null ? res.headers.get("location") : url;
+                if (!url.matches("http://(.)*")) {
+                    URL url1 = new URL(req.url);
+                    url = "http://" + url1.getHost() + ":" + (url1.getPort() == -1 ? 80 : url1.getPort()) + url;
+                }
+
+                Request rq = new Request("GET", new HashMap<>(), "", url);
                 res = rq.send();
             }
             if (isShowHeader) {

@@ -51,7 +51,7 @@ public class Request {
                 headers.put("User-Agent", "Concordia-HTTP/1.0");
             }
 
-            headers.put("Content-Length", String.valueOf(body.length()));
+            headers.put("Content-Length", String.valueOf(this.body.length()));
 
             for (Map.Entry<String, String> entry : headers.entrySet()) {
                 request.append(entry.getKey()).append(": ").append(entry.getValue()).append("\r\n");
