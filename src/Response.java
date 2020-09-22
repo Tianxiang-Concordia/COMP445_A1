@@ -37,7 +37,7 @@ public class Response {
         return rawData;
     }
 
-    public String showBody() {
+    public String getBody() {
         return body;
     }
 }

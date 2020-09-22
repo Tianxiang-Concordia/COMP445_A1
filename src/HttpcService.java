@@ -75,9 +75,9 @@ public class HttpcService {
                     }
                 } else {
                     if (isPrintToFile) {
-                        printOutputToFile(res.showBody());
+                        printOutputToFile(res.getBody());
                     } else {
-                        System.out.println(res.showBody());
+                        System.out.println(res.getBody());
                     }
                 }
                 String url = res.headers.get("Location");
@@ -98,9 +98,9 @@ public class HttpcService {
                 }
             } else {
                 if (isPrintToFile) {
-                    printOutputToFile(res.showBody());
+                    printOutputToFile(res.getBody());
                 } else {
-                    System.out.println(res.showBody());
+                    System.out.println(res.getBody());
                 }
             }
         }
