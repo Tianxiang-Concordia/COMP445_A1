@@ -1,7 +1,11 @@
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.stream.Stream;
 
 public class HttpcService {
 
@@ -129,8 +133,13 @@ public class HttpcService {
     }
 
     public static String readFromFile(String filePath) {
-        // @TODO read the document file and return the content
-        return "Balabala";
+        StringBuilder contentBuilder = new StringBuilder();
+        try (Stream<String> stream = Files.lines(Paths.get(filePath), StandardCharsets.UTF_8)) {
+            stream.forEach(s -> contentBuilder.append(s).append("\n"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return contentBuilder.toString().trim();
     }
 
     public void printOutputToFile(String content) {
