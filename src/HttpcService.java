@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.stream.Stream;
+
 public class HttpcService {
 
     private String[] input;
@@ -64,7 +65,7 @@ public class HttpcService {
 
             while (res.status.matches("3\\d{2}")) {
                 if (redirectionTimes > 10) {
-                    throw new Exception("Redirection too many times!");
+                    throw new Exception("Redirect too many times!");
                 }
                 this.redirectionTimes++;
                 if (this.isShowHeader) {
@@ -84,6 +85,7 @@ public class HttpcService {
                 url = url == null ? res.headers.get("location") : url;
                 if (!url.matches("http://(.)*")) {
                     URL url1 = new URL(req.url);
+                    if (url.charAt(0) != '/') url = "/" + url;
                     url = "http://" + url1.getHost() + ":" + (url1.getPort() == -1 ? 80 : url1.getPort()) + url;
                 }
 
